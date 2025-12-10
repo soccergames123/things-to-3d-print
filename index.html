@@ -252,6 +252,18 @@ button, a{font-family:inherit}
 const KEY = "xmas_3d_projects_v1";
 const SELECT_KEY = "xmas_selected_v1";
 
+// Safe JSON parse
+function safeParse(key){
+  try{
+    const raw = localStorage.getItem(key);
+    if(!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 // Elements
 const grid = document.getElementById("grid");
 const addBtn = document.getElementById("addBtn");
@@ -267,8 +279,8 @@ const preview = document.getElementById("preview");
 const searchInput = document.getElementById("searchInput");
 const modalTitle = document.getElementById("modalTitle");
 
-let projects = JSON.parse(localStorage.getItem(KEY) || "[]");
-let selected = JSON.parse(localStorage.getItem(SELECT_KEY) || "[]");
+let projects = safeParse(KEY);
+let selected = safeParse(SELECT_KEY);
 let editingId = null;
 let uploadedDataURL = "";
 
@@ -373,7 +385,6 @@ function render(){
     const toggle = document.createElement("div");
     toggle.className = "select-toggle";
     if(selected.includes(p.id)) toggle.classList.add("selected");
-
     toggle.innerHTML = `<div class="check">✔</div>`;
 
     toggle.onclick = () => {
