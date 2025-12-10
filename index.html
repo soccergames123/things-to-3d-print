@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Print Projects - Christmas</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --green: #1f7a3a;
+  --gold: #d4af37;
+  --red: #b71c1c;
+  --card-border: rgba(180,140,20,0.12);
+}
+
+/* Basic reset */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:'Poppins',system-ui}
+body{
+  background: linear-gradient(180deg,#fbfbfd 0%, #f3f8fb 40%, #eef6f3 100%);
+  color:#1f1f1f;
+  padding:28px 16px;
+}
+
+/* Container */
+.container{max-width:1040px;margin:0 auto}
+
+/* Header */
+.top{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:18px;margin-bottom:22px;flex-wrap:wrap
+}
+.title h1{margin:0;font-size:1.6rem;color:var(--red)}
+.subtitle{margin:4px 0 0;font-size:0.9rem;color:#556}
+
+/* Controls */
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.controls input[type="search"]{
+  width:320px;padding:10px 12px;border-radius:10px;
+  border:1px solid rgba(30,30,30,0.06);
+  background: linear-gradient(180deg, #fff, #fafafa);
+  outline:none;font-size:0.95rem;
+  box-shadow:0 4px 10px rgba(15,20,15,0.03);
+}
+.controls input[type="search"]::placeholder{color:#9aa}
+
+button, a{font-family:inherit}
+
+/* Primary button */
+.primary{
+  background: linear-gradient(180deg,var(--green), #2aa14f);
+  color:white;border:none;padding:10px 14px;border-radius:10px;
+  cursor:pointer;font-weight:600;
+  box-shadow:0 6px 18px rgba(31,122,60,0.15);
+}
+.primary:hover{transform:translateY(-3px);transition:transform .18s}
+
+/* Grid */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap:18px;
+}
+
+/* Card */
+.card{
+  background: linear-gradient(180deg,#fff,#fffdf9);
+  border-radius:12px;
+  padding:16px;
+  border:1px solid var(--card-border);
+  box-shadow:0 10px 30px rgba(20,30,20,0.04);
+  transition: all .25s ease;
+  position:relative;
+  min-height:140px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 36px rgba(20,30,20,0.08)
+}
+
+/* Selected card BG tint */
+.card.selected{
+  background: linear-gradient(180deg,#f2fff4,#eaffea);
+  border-color: var(--green);
+  box-shadow:0 10px 30px rgba(31,122,60,0.25);
+}
+
+/* Checkmark Toggle Button */
+.select-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #d0d0d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .25s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  z-index: 5;
+}
+
+.select-toggle.selected {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.select-toggle .check {
+  font-size: 16px;
+  color: white;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: all .25s ease;
+}
+
+.select-toggle.selected .check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.card h3{margin:0;color:var(--red);font-size:1.05rem}
+.card .meta{display:flex;gap:8px;flex-wrap:wrap}
+.tag{
+  padding:6px 10px;border-radius:999px;font-weight:600;font-size:0.85rem;
+  background:linear-gradient(180deg,var(--green), #2aa14f);
+  color:white;border:1px solid rgba(255,255,255,0.06)
+}
+.cat{
+  background:linear-gradient(90deg,#f3dfa2,#d4af37);
+  color:#2b220b;border:1px solid rgba(0,0,0,0.06)
+}
+
+.card img{
+  width:100%;height:140px;object-fit:cover;border-radius:8px;margin-top:6px
+}
+
+/* Buttons */
+.card .actions{margin-top:auto;display:flex;gap:8px}
+.btn{
+  flex:1;padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:700;
+  box-shadow:0 6px 14px rgba(0,0,0,0.06);text-align:center
+}
+.open{background:#fff;border:2px solid #d8b84a;color:#333}
+.edit{background:#fff;border:2px solid #9cc89c;color:#165b2b}
+.del{background:#fff;border:2px solid #f2a0a0;color:#8b2121}
+.overlay{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.42);z-index:60;padding:20px;
+}
+.hidden{display:none}
+
+.modal{
+  width:360px;background:linear-gradient(180deg,#ffffff,#fffefb);
+  padding:18px;border-radius:12px;
+  border:2px solid rgba(212,175,55,0.12);
+  box-shadow:0 24px 60px rgba(10,20,10,0.25);
+}
+.modal h2{margin:0 0 8px;color:var(--red)}
+.modal label{display:block;margin-top:8px;font-size:0.85rem;color:#444}
+
+.modal input[type="text"],
+.modal input[type="url"],
+.modal input[type="file"]{
+  width:100%;padding:10px;border-radius:8px;
+  border:1px solid rgba(30,30,30,0.06);margin-top:6px;
+  background:linear-gradient(180deg,#fff,#fffdf9)
+}
+
+.preview{
+  height:96px;border-radius:8px;background:#fffdf4;display:flex;
+  align-items:center;justify-content:center;color:#777;margin-top:10px;
+  border:1px dashed rgba(30,30,30,0.06)
+}
+
+.modal-actions{
+  display:flex;gap:10px;justify-content:flex-end;margin-top:12px
+}
+
+.save{
+  background:linear-gradient(180deg,#1f7a3a,#2aa14f);
+  color:white;padding:10px 14px;border-radius:8px;border:none;cursor:pointer
+}
+.cancel{
+  background:#f3f3f3;padding:10px 14px;border-radius:8px;
+  border:1px solid #ddd;cursor:pointer
+}
+
+@media (max-width:520px){
+  .modal{width:94%}
+  .controls{flex-direction:column;gap:8px}
+  .controls input{width:100%}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <header class="top">
+    <div class="title">
+      <h1>Things to 3D print</h1>
+      <p class="subtitle">Merry Christmas🎄</p>
+    </div>
+
+    <div class="controls">
+      <input id="searchInput" type="search" placeholder="Search title · filament · category">
+      <button id="addBtn" class="primary">+ Add Project</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="grid" class="grid"></div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div id="overlay" class="overlay hidden">
+  <div class="modal" id="modal">
+    <h2 id="modalTitle">Add Project</h2>
+
+    <label>Title</label>
+    <input id="title" type="text">
+
+    <label>Filament</label>
+    <input id="filament" type="text">
+
+    <label>Category</label>
+    <input id="category" type="text">
+
+    <label>Link</label>
+    <input id="link" type="url">
+
+    <label>Image (optional)</label>
+    <input id="image" type="file" accept="image/*">
+
+    <div id="preview" class="preview">No image</div>
+
+    <div class="modal-actions">
+      <button id="save" class="save">Add</button>
+      <button id="cancel" class="cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Storage keys
+const KEY = "xmas_3d_projects_v1";
+const SELECT_KEY = "xmas_selected_v1";
+
+// Elements
+const grid = document.getElementById("grid");
+const addBtn = document.getElementById("addBtn");
+const overlay = document.getElementById("overlay");
+const saveBtn = document.getElementById("save");
+const cancelBtn = document.getElementById("cancel");
+const titleInput = document.getElementById("title");
+const filamentInput = document.getElementById("filament");
+const categoryInput = document.getElementById("category");
+const linkInput = document.getElementById("link");
+const imageInput = document.getElementById("image");
+const preview = document.getElementById("preview");
+const searchInput = document.getElementById("searchInput");
+const modalTitle = document.getElementById("modalTitle");
+
+let projects = JSON.parse(localStorage.getItem(KEY) || "[]");
+let selected = JSON.parse(localStorage.getItem(SELECT_KEY) || "[]");
+let editingId = null;
+let uploadedDataURL = "";
+
+/* Helpers */
+function uid(){ return Math.random().toString(36).slice(2,9) }
+function saveStorage(){ localStorage.setItem(KEY, JSON.stringify(projects)) }
+function saveSelected(){ localStorage.setItem(SELECT_KEY, JSON.stringify(selected)) }
+
+function resetModal(){
+  editingId = null;
+  uploadedDataURL = "";
+  titleInput.value = filamentInput.value = categoryInput.value = linkInput.value = "";
+  imageInput.value = "";
+  preview.textContent = "No image";
+  preview.style.backgroundImage = "none";
+  modalTitle.textContent = "Add Project";
+}
+
+/* Modal control */
+addBtn.addEventListener("click", () => {
+  resetModal();
+  overlay.classList.remove("hidden");
+  setTimeout(()=> titleInput.focus(), 150);
+});
+
+cancelBtn.addEventListener("click", () => {
+  overlay.classList.add("hidden");
+  resetModal();
+});
+
+/* Image upload */
+imageInput.addEventListener("change", (e) => {
+  const f = e.target.files?.[0];
+  if(!f){ uploadedDataURL=""; preview.textContent="No image"; preview.style.background="none"; return; }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    uploadedDataURL = reader.result;
+    preview.style.backgroundImage = `url(${uploadedDataURL})`;
+    preview.style.backgroundSize = "cover";
+    preview.textContent = "";
+  };
+  reader.readAsDataURL(f);
+});
+
+/* Save button */
+saveBtn.addEventListener("click", () => {
+  const title = titleInput.value.trim();
+  const filament = filamentInput.value.trim();
+  const category = categoryInput.value.trim();
+  const link = linkInput.value.trim();
+
+  if(!title || !filament){
+    alert("Please enter a title and filament type.");
+    return;
+  }
+
+  if(editingId){
+    projects = projects.map(p => p.id === editingId ?
+      {...p, title, filament, category, link, image: uploadedDataURL || p.image }
+      : p
+    );
+  } else {
+    projects.unshift({
+      id: uid(),
+      title, filament, category, link,
+      image: uploadedDataURL || ""
+    });
+  }
+
+  saveStorage();
+  overlay.classList.add("hidden");
+  resetModal();
+  render();
+});
+
+/* Render cards */
+function render(){
+  grid.innerHTML = "";
+
+  const q = (searchInput.value || "").toLowerCase().trim();
+
+  const filtered = projects.filter(p =>
+    !q || p.title.toLowerCase().includes(q) ||
+    p.filament.toLowerCase().includes(q) ||
+    (p.category||"").toLowerCase().includes(q)
+  );
+
+  if(filtered.length === 0){
+    grid.innerHTML = `<div style="padding:24px;text-align:center;color:#666;border-radius:10px;border:1px dashed #eee">
+      No projects yet — click “+ Add Project” to start
+    </div>`;
+    return;
+  }
+
+  filtered.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card";
+    if(selected.includes(p.id)) card.classList.add("selected");
+
+    /* Checkmark button */
+    const toggle = document.createElement("div");
+    toggle.className = "select-toggle";
+    if(selected.includes(p.id)) toggle.classList.add("selected");
+
+    toggle.innerHTML = `<div class="check">✔</div>`;
+
+    toggle.onclick = () => {
+      if(selected.includes(p.id)){
+        selected = selected.filter(id => id !== p.id);
+        toggle.classList.remove("selected");
+        card.classList.remove("selected");
+      } else {
+        selected.push(p.id);
+        toggle.classList.add("selected");
+        card.classList.add("selected");
+      }
+      saveSelected();
+    };
+
+    card.appendChild(toggle);
+
+    /* Card content */
+    const title = document.createElement("h3");
+    title.textContent = p.title;
+    card.appendChild(title);
+
+    if(p.image){
+      const img = document.createElement("img");
+      img.src = p.image;
+      img.alt = p.title;
+      card.appendChild(img);
+    }
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+
+    const tag = document.createElement("div");
+    tag.className = "tag";
+    tag.textContent = p.filament;
+
+    const cat = document.createElement("div");
+    cat.className = "tag cat";
+    cat.textContent = p.category || "—";
+
+    meta.appendChild(tag);
+    meta.appendChild(cat);
+
+    card.appendChild(meta);
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const openBtn = document.createElement("a");
+    openBtn.className = "btn open";
+    openBtn.textContent = "Open";
+    openBtn.href = p.link || "#";
+    openBtn.target = "_blank";
+    actions.appendChild(openBtn);
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "btn edit";
+    editBtn.textContent = "Edit";
+    editBtn.onclick = () => {
+      editingId = p.id;
+      modalTitle.textContent = "Edit Project";
+      titleInput.value = p.title;
+      filamentInput.value = p.filament;
+      categoryInput.value = p.category;
+      linkInput.value = p.link;
+      uploadedDataURL = p.image;
+
+      if(p.image){
+        preview.style.backgroundImage = `url(${p.image})`;
+        preview.style.backgroundSize = "cover";
+        preview.textContent = "";
+      } else {
+        preview.style.backgroundImage = "none";
+        preview.textContent = "No image";
+      }
+
+      overlay.classList.remove("hidden");
+    };
+    actions.appendChild(editBtn);
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "btn del";
+    delBtn.textContent = "Delete";
+    delBtn.onclick = () => {
+      if(confirm(`Delete "${p.title}"?`)){
+        projects = projects.filter(x => x.id !== p.id);
+        saveStorage();
+        render();
+      }
+    };
+    actions.appendChild(delBtn);
+
+    card.appendChild(actions);
+    grid.appendChild(card);
+  });
+}
+
+/* Search live */
+searchInput.addEventListener("input", render);
+
+/* Initial render */
+render();
+
+/* Escape to close modal */
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape" && !overlay.classList.contains("hidden")){
+    overlay.classList.add("hidden");
+    resetModal();
+  }
+});
+</script>
+
+</body>
+</html>
